@@ -1,0 +1,97 @@
+Sub StockSummaryTables()
+
+Dim ws As Worksheet
+For Each ws In Worksheets
+
+        Dim i As Double
+        Dim summaryTableRow As Integer
+        Dim lastrow As Long
+        Dim TotalVol As Double
+        Dim YearChange As Double
+        Dim StockOpen As Double
+        Dim PercentChange As Double
+        Dim MaxIncrease As Double
+        Dim MaxDecrease As Double
+        Dim MaxVolume As Double
+        Dim p As Double
+        
+    summaryTableRow = 2
+    TotalVol = 0
+    StockOpen = Cells(2, 3).Value
+    ws.Cells(1, 9) = "Ticker"
+    ws.Cells(1, 10) = "YearChange"
+    ws.Cells(1, 11) = "PercentChange"
+    ws.Cells(1, 12) = "TotalVolume"
+    ws.Cells(1, 15) = "Ticket"
+
+    lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+    
+    For i = 2 To lastrow
+        If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+            ws.Cells(summaryTableRow, 9).Value = ws.Cells(i, 1).Value
+            TotalVol = TotalVol + ws.Cells(i, 7).Value
+            ws.Cells(summaryTableRow, 12).Value = TotalVol
+            
+            YearChange = ws.Cells(i, 6).Value - StockOpen
+            
+            If StockOpen > 0 Then
+                PercentChange = YearChange / StockOpen
+            Else
+                PercentChange = -1
+            End If
+            ws.Cells(summaryTableRow, 10).Value = YearChange
+            ws.Cells(summaryTableRow, 11).Value = PercentChange
+            
+            If YearChange < 0 Then
+                ws.Cells(summaryTableRow, 10).Interior.ColorIndex = 3
+            Else
+                ws.Cells(summaryTableRow, 10).Interior.ColorIndex = 4
+            End If
+            
+            summaryTableRow = summaryTableRow + 1
+            TotalVol = 0
+            PercentChange = 0
+            StockOpen = ws.Cells(i + 1, 3).Value
+      
+        Else
+           TotalVol = TotalVol + ws.Cells(i, 7).Value
+           
+             End If
+            
+    Next i
+    
+        ws.Range("K:K").NumberFormat = "0.00%"
+
+        ws.Cells(1, 16) = "Value"
+        ws.Cells(2, 14) = "Greatest Increase"
+        ws.Cells(3, 14) = "Greatest Decrease"
+        ws.Cells(4, 14) = "Greatest Total Volume"
+        
+        MaxIncrease = Application.WorksheetFunction.Max(ws.Columns("K"))
+        MaxDecrease = Application.WorksheetFunction.Min(ws.Columns("K"))
+        MaxVolume = Application.WorksheetFunction.Max(ws.Columns("L"))
+        
+        ws.Cells(2, 16).Value = MaxIncrease
+        ws.Cells(3, 16).Value = MaxDecrease
+        ws.Cells(4, 16).Value = MaxVolume
+       
+        
+        ws.Cells(2, 16).NumberFormat = "0.00%"
+        ws.Cells(3, 16).NumberFormat = "0.00%"
+        
+        For p = 2 To lastrow
+            If ws.Cells(p, 11).Value = MaxIncrease Then
+            ws.Cells(2, 15).Value = ws.Cells(p, 9).Value
+            End If
+            If ws.Cells(p, 11).Value = MaxDecrease Then
+            ws.Cells(3, 15).Value = ws.Cells(p, 9).Value
+            End If
+            If ws.Cells(p, 12).Value = MaxVolume Then
+            ws.Cells(4, 15).Value = ws.Cells(p, 9).Value
+            End If
+        Next p
+        
+
+Next
+
+End Sub
