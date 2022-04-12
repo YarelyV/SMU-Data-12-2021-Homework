@@ -1,9 +1,9 @@
 $(document).ready(function() {
     doWork();
     console.log("Page Loaded");
-    $("#selDataset").on("change", function() {
-        doWork();
-    })
+    // $("#selDataset").on("change", function() {
+    //     doWork();
+    // })
 
 });
 //use ajax to call on data
