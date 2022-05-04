@@ -117,6 +117,7 @@ class Scrape():
             # visit the found URL
             browser.visit(item_url)
             html2 = browser.html
+            time.sleep(3)
             soup2 = BeautifulSoup(html2)
             hemi_url = url + soup2.find("img", {"class": "wide-image"})["src"]
             
